@@ -1,10 +1,10 @@
 open Format
 
 include Datalog.Make(struct
-  type t = string
-  let equal = (=)
-  let hash = Hashtbl.hash
-end)
+    type t = string
+    let equal = (=)
+    let hash = Hashtbl.hash
+  end)
 
 let inrange x low high = (x >= low) && (x <= high)
 let isupper c = inrange c 'A' 'Z'
@@ -39,24 +39,24 @@ let print_atom atom =
   let terms = getterms atom in
   match pred, terms with
     "=", [a; b] ->			(* print equality *)
-      open_box 2;
-      print_term a;
-      print_space();
-      print_string "= ";
-      print_term b;
-      close_box()
+    open_box 2;
+    print_term a;
+    print_space();
+    print_string "= ";
+    print_term b;
+    close_box()
   | _ ->				(* print predicate *)
-      print_string pred;
-      match terms with
-	[] -> ()
-      | term :: terms ->
-	  print_char '(';
-	  open_box 0;
-	  print_term term;
-	  let print_rest term =
-	    print_char ',';
-	    print_space();
-	    print_term term in
-	  List.iter print_rest terms;
-	  close_box();
-	  print_char ')'
+    print_string pred;
+    match terms with
+      [] -> ()
+    | term :: terms ->
+      print_char '(';
+      open_box 0;
+      print_term term;
+      let print_rest term =
+        print_char ',';
+        print_space();
+        print_term term in
+      List.iter print_rest terms;
+      close_box();
+      print_char ')'

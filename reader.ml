@@ -34,9 +34,9 @@ let read_program file_name =
   with Parsing.Parse_error ->
     close_in chan;
     report_parse_error file_name lexbuf
-  | Failure s ->
-    close_in chan;
-    report_error file_name lexbuf s
+     | Failure s ->
+       close_in chan;
+       report_error file_name lexbuf s
 
 let read_clause_from_string str =
   let lexbuf = Lexing.from_string str in
@@ -45,5 +45,5 @@ let read_clause_from_string str =
     Parser.a_clause Scanner.token lexbuf
   with Parsing.Parse_error ->
     report_parse_error "-" lexbuf
-  | Failure s ->
-    report_error "-" lexbuf s
+     | Failure s ->
+       report_error "-" lexbuf s

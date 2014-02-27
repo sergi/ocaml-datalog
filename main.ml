@@ -17,18 +17,18 @@ let get_args() =
   let input_file = ref "-" in
 
   (** [anon_var] is used to track the number of free-floating
-  arguments.  0 means we have seen none, 1 means we have seen 1, 2
-  means we have seen too many. *)
+      arguments.  0 means we have seen none, 1 means we have seen 1, 2
+      means we have seen too many. *)
 
   let anon_var = ref 0 in
 
   let anon_fun str =
     match !anon_var with
       0 ->
-	input_file := str;
-	anon_var := 1
+      input_file := str;
+      anon_var := 1
     | _ ->
-	anon_var := 2 in
+      anon_var := 2 in
 
   (* set up Arg.parse *)
 
@@ -69,9 +69,9 @@ let run (input_file_name, output_file_name) =
     (** open output file *)
     let out =
       if output_file_name = "-" then
-	stdout
+        stdout
       else
-	open_out output_file_name in
+        open_out output_file_name in
 
     Format.set_formatter_out_channel out;
 
