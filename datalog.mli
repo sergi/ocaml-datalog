@@ -16,94 +16,92 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *)
 
-(** Datalog *)
+(* Datalog *)
 
-(** The inference engine uses tabled logic programming to ensure that
-   all queries terminate.  The logical constants used by the engine
-   follow. *)
+(* The inference engine uses tabled logic programming (memoization) to ensure
+ * that all queries terminate. The logical constants used by the
+ * engine follow. *)
 
+(* The input signature of the functor {!Datalog.Make}. *)
 module type DatalogType = Hashtbl.HashedType
-(** The input signature of the functor {!Datalog.Make}. *)
 
 module type T =
-  sig
-    type value
-(** The type of logical constants. *)
+sig
+  (** The type of logical constants. *)
+  type value
 
-    type term
-(** The type of a term. *)
+  (* The type of a term. *)
+  type term
 
-    val mkvar : string -> term
+  val mkvar : string -> term
 
-    val mkval : value -> term
-(** Term constructors. *)
+  (* Term constructors. *)
+  val mkval : value -> term
 
-    val spreadterm : (string -> 'a) -> (value -> 'a) -> term -> 'a
-(** [spreadterm f g t] calls [f] if term [t] is a variable, and
-   [g] if it is a value. *)
+  (* [spreadterm f g t] calls [f] if term [t] is a variable, and [g] if it
+   * is a value. *)
+  val spreadterm : (string -> 'a) -> (value -> 'a) -> term -> 'a
 
-    type literal
-(** The type of a literal. *)
+  (* The type of a literal. *)
+  type literal
 
-    val mkliteral : string -> term list -> literal
-(** Constructs a literal. *)
+  (* Constructs a literal. *)
+  val mkliteral : string -> term list -> literal
 
-    val getpred : literal -> string
+  val getpred : literal -> string
 
-    val getterms : literal -> term list
-(** Gets the parts of a literal. *)
+  (* Gets the parts of a literal. *)
+  val getterms : literal -> term list
 
-    type clause
-(** The type of a clause. *)
+  (* The type of a clause. *)
+  type clause
 
-    val mkclause : literal -> literal list -> clause
-(** Constructs a clause. *)
+  (* Constructs a clause. *)
+  val mkclause : literal -> literal list -> clause
 
-    val gethead : clause -> literal
+  val gethead : clause -> literal
 
-    val getbody : clause -> literal list
-(** Gets the parts of a clause. *)
+  (* Gets the parts of a clause. *)
+  val getbody : clause -> literal list
 
-    type primitive = int -> value list -> value list option
-(** The type of a primitive implemented as a function. *)
+  (* The type of a primitive implemented as a function. *)
+  type primitive = int -> value list -> value list option
 
-    val add_primitive : string -> int -> primitive -> unit
+  (* Add a primitive. After [add_primitive symbol in_arity primitive],
+   * the predicate symbol is bound to a predicate that takes in in_arity
+   * values. When invoked, a predicate is given the number of output values
+   * it is expected to produce, and a list of input values.  If the predicate
+   * succeeds, it returns a list of values that are unified with terms at the
+   * end of the query. A predicate signals failure by returning None. *)
+  val add_primitive : string -> int -> primitive -> unit
 
-(** Add a primitive.  After [add_primitive symbol in_arity primitive],
-   the predicate symbol is bound to a predicate that takes in in_arity
-   values.  When invoked, a predicate is given the number of output
-   values it is expected to produce, and a list of input values.  If
-   the predicate succeeds, it returns a list of values that are
-   unified with terms at the end of the query.  A predicate signals
-   failure by returning None. *)
+  type theory
+  (** The type of a theory. *)
 
-    type theory
-(** The type of a theory. *)
+  (* Create a theory. For best results, the integer should be on the order
+   * of the expected number of clauses that make up the theory. The theory
+   * will grow as needed. *)
+  val create : int -> theory
 
-    val create : int -> theory
-(** Create a theory.  For best results, the integer should be on the
-   order of the expected number of clauses that make up the theory.
-   The theory will grow as needed. *)
+  (* Return a copy of the given theory. *)
+  val copy : theory -> theory
 
-    val copy : theory -> theory
-(** Return a copy of the given theory. *)
+  exception Unsafe_clause
 
-    exception Unsafe_clause
+  val assume : theory -> clause -> unit
+  (* Add a clause as an assumption of the theory.  Raise an exception if
+   * clause is not safe. *)
 
-    val assume : theory -> clause -> unit
-(** Add a clause as an assumption of the theory.  Raise an exception
-   if clause is not safe.  *)
+  val retract : theory -> clause -> unit
+  (** Retract a clause as an assumption of the theory. *)
 
-    val retract : theory -> clause -> unit
-(** Retract a clause as an assumption of the theory. *)
-
-    val prove : theory -> literal -> literal list
-(** Given a literal as a query, returns a list of instances of the query
-   that are derivable from the current theory.  If the list is empty,
-   the query has no derivations, and is thus false. *)
+  val prove : theory -> literal -> literal list
+  (* Given a literal as a query, returns a list of instances of the query
+   * that are derivable from the current theory. If the list is empty, the
+   * query has no derivations, and is thus false. *)
 
 end
-(** The output signature of the functor {!Datalog.Make}. *)
+(* The output signature of the functor {!Datalog.Make}. *)
 
+(* Functor building an implementation of the Datalog structure. *)
 module Make (D : DatalogType) : T with type value = D.t
-(** Functor building an implementation of the Datalog structure. *)

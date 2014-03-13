@@ -1,11 +1,11 @@
 #! /bin/sh
 
-for i in *.dl
+for i in test/*.dl
 do
-    b=`basename $i .dl`
+    b=test/`basename $i .dl`
     ./datalog $i | sort > $b.out
     if diff -u $b.txt $b.out
     then
-	rm $b.out
+      rm $b.out
     fi
 done
