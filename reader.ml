@@ -40,7 +40,6 @@ let read_program file_name =
 
 let read_clause_from_string str =
   let lexbuf = Lexing.from_string str in
-  Scanner.init();
   try
     Parser.a_clause Scanner.token lexbuf
   with Parsing.Parse_error ->
