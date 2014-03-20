@@ -5,7 +5,7 @@
 
 open Prover
 
-val read_program : string -> clause list * literal
+val read_program : in_channel -> clause list * literal
 (** Reads a Datalog program.  The argument is the name of a file.
    Standard input is used if the file name is "-". *)
 

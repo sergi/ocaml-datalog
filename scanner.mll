@@ -4,6 +4,8 @@
 
 open Parser
 
+(* Returns a tuple with the current line number and the start and end
+ * characters for the current lexeme *)
 let lexeme_place lexbuf =
   let pos = lexbuf.Lexing.lex_curr_p in
   let start =
@@ -12,11 +14,9 @@ let lexeme_place lexbuf =
     Lexing.lexeme_end lexbuf - pos.Lexing.pos_bol + 2 in
   (pos.Lexing.pos_lnum, start, finish)
 
-  (* Quoted string handling *)
-
 (* Convert the external version of string into the internal representation *)
-  let strip str =
-    Scanf.sscanf str "%S" (fun s -> s)
+let strip str =
+  Scanf.sscanf str "%S" (fun s -> s)
 }
 
 let newline = '\n' | '\r' | "\r\n"

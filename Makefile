@@ -1,19 +1,19 @@
 NAME = ocaml-datalog
 
 all:
-	ocamlfind ocamlc -c datalog.mli
-	ocamlfind ocamlc -c datalog.ml
-	ocamlfind ocamlc -c datalog.ml
-	ocamlfind ocamlc -c prover.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -c datalog.mli
+	ocamlfind ocamlc -linkpkg -thread -package core -c datalog.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -c datalog.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -c prover.ml
 	ocamlyacc parser.mly
-	ocamlfind ocamlc -c parser.mli
-	ocamlfind ocamlc -c parser.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -c parser.mli
+	ocamlfind ocamlc -linkpkg -thread -package core -c parser.ml
 	ocamllex scanner.mll
-	ocamlfind ocamlc -c scanner.ml
-	ocamlfind ocamlc -c reader.mli
-	ocamlfind ocamlc -c reader.ml
-	ocamlfind ocamlc -c main.ml
-	ocamlfind ocamlc -o datalog datalog.cmo prover.cmo parser.cmo scanner.cmo	\
+	ocamlfind ocamlc -linkpkg -thread -package core -c scanner.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -c reader.mli
+	ocamlfind ocamlc -linkpkg -thread -package core -c reader.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -c main.ml
+	ocamlfind ocamlc -linkpkg -thread -package core -o datalog datalog.cmo prover.cmo parser.cmo scanner.cmo	\
 reader.cmo main.cmo
 
 test:

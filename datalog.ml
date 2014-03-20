@@ -101,7 +101,7 @@ struct
   let fresh () =
     let n = !id in
     id := n + 1;
-    Var (string_of_int n)		(* don't intern fresh vars *)
+    Var (string_of_int n)  (* don't intern fresh vars *)
 
   (* enviroments *)
 
