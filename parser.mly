@@ -4,11 +4,13 @@
 %token <string> VAL VAR
 %token LPAREN, RPAREN, EQUAL, COMMA, IMPLY, PERIOD, QUESTION, EOF
 
-%start program a_clause
+%start program a_clause a_query
 
 %type <Prover.clause list * Prover.literal> program
 
 %type <Prover.clause> a_clause
+
+%type <Prover.literal> a_query
 
 %%
 
@@ -21,6 +23,10 @@ program:
 
 a_clause:
   clause PERIOD EOF              { $1 }
+;
+
+a_query:
+  query EOF              { $1 }
 ;
 
 clauses:

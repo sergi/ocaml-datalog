@@ -12,8 +12,8 @@ all:
 	ocamlfind ocamlc -linkpkg -thread -package core -c scanner.ml
 	ocamlfind ocamlc -linkpkg -thread -package core -c reader.mli
 	ocamlfind ocamlc -linkpkg -thread -package core -c reader.ml
-	ocamlfind ocamlc -linkpkg -thread -package core -c main.ml
-	ocamlfind ocamlc -linkpkg -thread -package core -o datalog datalog.cmo prover.cmo parser.cmo scanner.cmo	\
+	ocamlfind ocamlc -linkpkg -thread -package core,core_extended -c main.ml
+	ocamlfind ocamlc -linkpkg -thread -package core,core_extended -o datalog datalog.cmo prover.cmo parser.cmo scanner.cmo	\
 reader.cmo main.cmo
 
 test:

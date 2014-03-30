@@ -46,3 +46,13 @@ let read_clause_from_string str =
     report_parse_error "-" lexbuf
   | Failure s ->
       report_error "-" lexbuf s
+
+let read_atom_from_string str =
+  let lexbuf = Lexing.from_string str in
+  try
+    Parser.a_query Scanner.token lexbuf
+  with Parsing.Parse_error ->
+    report_parse_error "-" lexbuf
+  | Failure s ->
+      report_error "-" lexbuf s
+
