@@ -16,22 +16,16 @@ let report_error file_name lexbuf msg =
 let report_parse_error file_name lexbuf =
   report_error file_name lexbuf "syntax error"
 
-let open_in_or_stdin file_name =
-  if file_name = "-" then
-    stdin
-  else
-    open_in file_name
-
 (* Reads a Datalog program.  The argument is the name of the file. Standard
  * input is used if the file name is "-". *)
 let read_program chan =
   let lexbuf = Lexing.from_channel chan in
   try
-    let prog =
-      Parser.program Scanner.token lexbuf in
+    let prog = Parser.program Scanner.token lexbuf in
     In_channel.close chan;
     prog
-  with Parsing.Parse_error ->
+  with
+  | Parsing.Parse_error ->
     In_channel.close chan;
     report_parse_error "placeholder" lexbuf
   | Failure s ->
@@ -42,17 +36,15 @@ let read_clause_from_string str =
   let lexbuf = Lexing.from_string str in
   try
     Parser.a_clause Scanner.token lexbuf
-  with Parsing.Parse_error ->
-    report_parse_error "-" lexbuf
-  | Failure s ->
-      report_error "-" lexbuf s
+  with
+  | Parsing.Parse_error -> report_parse_error "-" lexbuf
+  | Failure s -> report_error "-" lexbuf s
 
 let read_atom_from_string str =
   let lexbuf = Lexing.from_string str in
   try
     Parser.a_query Scanner.token lexbuf
-  with Parsing.Parse_error ->
-    report_parse_error "-" lexbuf
-  | Failure s ->
-      report_error "-" lexbuf s
+  with
+  | Parsing.Parse_error -> report_parse_error "-" lexbuf
+  | Failure s -> report_error "-" lexbuf s
 

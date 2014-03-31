@@ -51,7 +51,7 @@ let rec loop f theory =
 
       Format.set_formatter_out_channel stdout;
       List.iter atoms show;
-      exit 1
+      loop f theory
 
 let command =
   Command.basic
